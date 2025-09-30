@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Weed Detection Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f0f2f5; }
+    .result-img, .result-video {
+      max-width: 100%;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+    .dashboard {
+      background: #ffffff;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">🌿 AI Weed Detection Dashboard</h2>
+
+  <!-- Upload Form -->
+  <form id="uploadForm" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="mediaUpload" class="form-label">Upload Field Image or Video</label>
+      <input class="form-control" type="file" id="mediaUpload" name="media" accept="image/*,video/*">
+    </div>
+    <button type="submit" class="btn btn-success">Analyze</button>
+  </form>
+
+  <!-- Loading -->
+  <div id="loading" class="text-center mt-3" style="display:none;">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p>Analyzing, please wait...</p>
+  </div>
+
+  <!-- Result Section -->
+  <div id="resultSection" class="row mt-4" style="display:none;">
+    <!-- Annotated Image/Video -->
+    <div class="col-md-6">
+      <h5>🖼️ Annotated Output</h5>
+      <img id="resultImage" class="result-img" src="#" alt="Result Image" style="display:none;">
+      <video id="resultVideo" class="result-video" controls style="display:none;"></video>
+    </div>
+
+    <!-- Coordinates Dashboard -->
+    <div class="col-md-6 dashboard">
+      <h5>📍 Detected Coordinates</h5>
+      <ul id="coordinatesList" class="list-group"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- JavaScript Logic -->
+<script>
+document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const mediaFile = document.getElementById('mediaUpload').files[0];
+  if (!mediaFile) {
+    alert('Please upload an image or video.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('media', mediaFile);
+
+  const loading = document.getElementById('loading');
+  const resultSection = document.getElementById('resultSection');
+  const resultImage = document.getElementById('resultImage');
+  const resultVideo = document.getElementById('resultVideo');
+  const coordinatesList = document.getElementById('coordinatesList');
+
+  loading.style.display = 'block';
+  resultSection.style.display = 'none';
+  coordinatesList.innerHTML = '';
+  resultImage.style.display = 'none';
+  resultVideo.style.display = 'none';
+
+  try {
+    const response = await fetch('/analyze', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await response.json();
+
+    // Annotated Media
+    if (data.media_type === 'image') {
+      resultImage.src = data.annotated_url;
+      resultImage.style.display = 'block';
+    } else if (data.media_type === 'video') {
+      resultVideo.src = data.annotated_url;
+      resultVideo.style.display = 'block';
+    }
+
+    // Coordinates
+    data.coordinates.forEach((coord, index) => {
+      const li = document.createElement('li');
+      li.classList.add('list-group-item');
+      li.innerText = `Point ${index + 1}: (X: ${coord.x}, Y: ${coord.y})`;
+      coordinatesList.appendChild(li);
+    });
+
+    resultSection.style.display = 'flex';
+
+  } catch (err) {
+    alert('Something went wrong!');
+    console.error(err);
+  } finally {
+    loading.style.display = 'none';
+  }
+});
+</script>
+
+</body>
+</html>
