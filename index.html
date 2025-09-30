@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>AgriVision Dashboard</title>
@@ -10,8 +11,10 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #4caf50;     /* green accent */
-      --secondary-color: #2e7d32;   /* dark green */
+      --primary-color: #4caf50;
+      /* green accent */
+      --secondary-color: #2e7d32;
+      /* dark green */
       --bg-light: #f3f9f1;
       --bg-dark: #1e1e1e;
       --text-light: #ffffff;
@@ -42,6 +45,27 @@
       font-size: 1.5rem;
     }
 
+    .navbar .nav-link {
+      color: var(--text-light);
+      text-decoration: none;
+      position: relative;
+    }
+
+    .navbar .nav-link:hover {
+      text-decoration: underline;
+    }
+
+    .navbar-nav {
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding-right:60px;
+    } 
+
+    .nav-item {
+      padding-right: 1rem;
+    }
+
     .theme-toggle-btn {
       color: var(--text-light);
       background: transparent;
@@ -54,15 +78,22 @@
       padding-bottom: 40px;
     }
 
+    .container-fluid {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
     .card {
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
     }
 
     .user-card {
       background-color: #ffffff;
     }
+
     .user-card.dark-mode {
       background-color: #2c2c2c;
     }
@@ -70,6 +101,7 @@
     .upload-card {
       background-color: #ffffff;
     }
+
     .upload-card.dark-mode {
       background-color: #2c2c2c;
     }
@@ -81,9 +113,10 @@
       padding: 10px;
       border-radius: 8px;
       margin-bottom: 12px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
       transition: background 0.3s;
     }
+
     .history-entry.dark-mode {
       background-color: #333333;
     }
@@ -97,17 +130,21 @@
       border: 1px solid #ccc;
     }
 
-    .result-img, .result-video {
+    .result-img,
+    .result-video {
       max-width: 100%;
       border-radius: 8px;
       margin-top: 10px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
     }
 
     #loadingOverlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255,255,255,0.8);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.8);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -118,6 +155,7 @@
     }
   </style>
 </head>
+
 <body>
   <!-- Loading Overlay -->
   <div id="loadingOverlay">
@@ -131,6 +169,20 @@
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <span class="navbar-brand"><i class="fas fa-seedling"></i> AgriVision</span>
+      <ul class="navbar-nav  mb-1.5 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="cropdetails.html">Crop Details</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="weeddetails.html">Weed Info</a>
+        </li>
+          <li class="nav-item">
+            <a class="nav-link" href="aboutus.html">About Us</a>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">User Info</a>
+        </li>
+      </ul>
       <button class="theme-toggle-btn" onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
     </div>
   </nav>
@@ -208,7 +260,7 @@
       });
     });
 
-    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+    document.getElementById('uploadForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       const mediaFile = document.getElementById('mediaUpload').files[0];
       if (!mediaFile) return alert('Please select a file.');
@@ -245,7 +297,7 @@
         data.coordinates.forEach((coord, i) => {
           const li = document.createElement('li');
           li.classList.add('list-group-item');
-          li.innerHTML = `<i class="fas fa-map-marker-alt"></i> Point ${i+1}: (X: ${coord.x}, Y: ${coord.y})`;
+          li.innerHTML = `<i class="fas fa-map-marker-alt"></i> Point ${i + 1}: (X: ${coord.x}, Y: ${coord.y})`;
           coordinatesList.appendChild(li);
         });
 
@@ -294,4 +346,5 @@
   </script>
 
 </body>
+
 </html>
